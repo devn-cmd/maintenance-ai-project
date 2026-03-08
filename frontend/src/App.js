@@ -102,7 +102,6 @@ function App() {
           <p><strong>Criticality:</strong> {priorityData.criticality}</p>
           <p><strong>Risk Score:</strong> {priorityData.risk_score}</p>
           <p><strong>Simulated Risk (If PM Completed):</strong> {priorityData.simulated_risk_after_pm}</p>
-
           <p>
             <strong>Risk Reduction if PM Done:</strong>
             <span style={{ color: "blue", marginLeft: "5px" }}>
@@ -125,7 +124,9 @@ function App() {
               {priorityData.suggested_priority}
             </span>
           </p>
-
+          <p><strong>Execution Status:</strong> {priorityData.execution_status}</p>
+          <p><strong>Execution Note:</strong> {priorityData.execution_note}</p>
+          <p><strong>Planning Recommendation:</strong> {priorityData.planning_recommendation}</p>
           <p>
             <strong>Explanation:</strong><br />
             {priorityData.explanation}
