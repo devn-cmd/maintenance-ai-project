@@ -1,0 +1,201 @@
+equipment_id,failure_mode,failure_date,repair_duration_hours,priority,maintenance_type
+E1025,Bearing Wear,2023-12-25,6.96,P1,Corrective
+E1034,Overheating,2023-09-10,6.63,P1,Corrective
+E1022,Bearing Wear,2023-09-26,7.32,P1,Inspection
+E1026,Seal Failure,2023-03-27,1.44,P2,Inspection
+E1032,Leakage,2024-07-03,5.02,P1,Inspection
+E1021,Seal Failure,2023-07-11,3.96,P3,Corrective
+E1036,Leakage,2024-07-27,3.83,P1,Inspection
+E1042,Leakage,2023-01-29,8.54,P2,Inspection
+E1038,Electrical Fault,2023-05-25,5.16,P3,Inspection
+E1015,Overheating,2023-08-06,2.53,P3,Corrective
+E1014,Electrical Fault,2023-09-07,1.21,P2,Inspection
+E1050,Overheating,2023-03-17,4.35,P3,Inspection
+E1037,Leakage,2023-11-13,5.66,P2,Corrective
+E1002,Bearing Wear,2024-07-08,8.69,P2,Inspection
+E1037,Overheating,2024-06-24,4.01,P3,Corrective
+E1036,Seal Failure,2024-05-31,8.84,P3,Corrective
+E1017,Electrical Fault,2024-04-17,4.19,P1,Inspection
+E1039,Seal Failure,2023-03-25,2.94,P2,Corrective
+E1002,Electrical Fault,2023-10-03,9.14,P3,Inspection
+E1041,Electrical Fault,2024-04-24,6.94,P1,Corrective
+E1037,Bearing Wear,2023-08-30,1.11,P1,Inspection
+E1050,Seal Failure,2023-02-28,6.56,P3,Corrective
+E1013,Bearing Wear,2023-10-01,1.52,P1,Corrective
+E1002,Leakage,2023-09-15,3.87,P1,Inspection
+E1045,Leakage,2023-06-03,7.31,P3,Inspection
+E1038,Seal Failure,2023-03-03,8.29,P2,Inspection
+E1036,Seal Failure,2023-12-29,1.56,P1,Corrective
+E1020,Leakage,2023-08-16,7.85,P3,Inspection
+E1038,Leakage,2023-06-25,1.16,P2,Corrective
+E1033,Overheating,2023-01-30,2.33,P3,Inspection
+E1008,Overheating,2023-03-12,2.6,P2,Inspection
+E1035,Overheating,2023-01-01,4.46,P1,Inspection
+E1013,Overheating,2024-03-17,5.71,P1,Corrective
+E1008,Seal Failure,2023-04-08,3.44,P3,Inspection
+E1031,Overheating,2023-02-08,2.84,P1,Inspection
+E1020,Seal Failure,2023-03-05,1.81,P2,Corrective
+E1024,Bearing Wear,2023-12-15,6.23,P3,Corrective
+E1007,Seal Failure,2023-04-26,7.02,P1,Corrective
+E1013,Bearing Wear,2024-05-19,2.69,P1,Corrective
+E1001,Bearing Wear,2023-11-22,3.54,P2,Corrective
+E1020,Leakage,2024-07-13,2.81,P3,Inspection
+E1022,Bearing Wear,2023-07-26,9.42,P3,Corrective
+E1014,Electrical Fault,2023-04-08,2.53,P1,Corrective
+E1017,Bearing Wear,2023-12-03,5.44,P3,Corrective
+E1036,Leakage,2023-01-29,9.71,P3,Corrective
+E1016,Overheating,2024-01-06,1.91,P3,Inspection
+E1039,Bearing Wear,2023-06-19,6.57,P2,Inspection
+E1047,Bearing Wear,2024-02-01,2.47,P2,Corrective
+E1010,Leakage,2024-04-06,7.62,P3,Corrective
+E1028,Overheating,2023-11-04,2.89,P2,Corrective
+E1010,Seal Failure,2023-12-25,5.87,P3,Inspection
+E1008,Leakage,2023-04-04,2.4,P3,Corrective
+E1040,Electrical Fault,2024-05-22,2.46,P1,Inspection
+E1036,Electrical Fault,2023-11-13,3.01,P1,Corrective
+E1032,Electrical Fault,2023-02-28,7.95,P2,Corrective
+E1034,Overheating,2024-02-03,3.71,P2,Inspection
+E1048,Leakage,2024-06-29,3.35,P3,Corrective
+E1018,Seal Failure,2023-08-12,7.22,P2,Inspection
+E1042,Bearing Wear,2023-11-29,4.47,P2,Corrective
+E1030,Seal Failure,2023-01-11,6.34,P3,Corrective
+E1021,Seal Failure,2023-02-28,2.14,P1,Corrective
+E1009,Overheating,2024-07-05,9.46,P1,Corrective
+E1037,Overheating,2023-03-25,5.72,P3,Inspection
+E1018,Overheating,2024-04-20,3.06,P2,Inspection
+E1033,Leakage,2024-06-03,6.61,P1,Corrective
+E1033,Overheating,2023-02-27,2.31,P1,Inspection
+E1018,Overheating,2024-06-12,6.39,P3,Corrective
+E1011,Leakage,2023-12-09,5.6,P2,Corrective
+E1028,Electrical Fault,2024-02-09,4.11,P2,Corrective
+E1029,Overheating,2024-04-07,6.81,P3,Corrective
+E1029,Seal Failure,2023-07-08,9.29,P1,Corrective
+E1009,Electrical Fault,2023-07-27,7.73,P3,Inspection
+E1013,Leakage,2024-05-03,6.87,P3,Inspection
+E1008,Leakage,2023-04-18,2.17,P3,Inspection
+E1035,Bearing Wear,2023-11-05,8.12,P3,Corrective
+E1037,Overheating,2023-10-04,2.76,P1,Corrective
+E1024,Leakage,2024-06-01,8.83,P2,Inspection
+E1015,Leakage,2024-07-30,6.85,P3,Corrective
+E1014,Overheating,2023-12-23,6.85,P3,Corrective
+E1027,Electrical Fault,2023-08-26,2.61,P3,Corrective
+E1033,Leakage,2024-04-26,2.33,P2,Inspection
+E1050,Bearing Wear,2024-06-27,5.28,P1,Corrective
+E1028,Bearing Wear,2023-12-13,4.47,P3,Corrective
+E1035,Overheating,2023-07-30,8.04,P2,Corrective
+E1038,Electrical Fault,2024-08-05,6.9,P3,Corrective
+E1037,Leakage,2023-06-10,4.52,P2,Corrective
+E1048,Bearing Wear,2023-05-02,3.64,P2,Inspection
+E1009,Seal Failure,2023-04-10,8.45,P1,Corrective
+E1038,Overheating,2024-08-18,1.22,P3,Inspection
+E1042,Leakage,2023-09-02,6.54,P1,Corrective
+E1016,Overheating,2023-08-04,3.86,P3,Inspection
+E1022,Leakage,2023-06-25,2.54,P2,Inspection
+E1030,Overheating,2023-11-01,2.86,P1,Inspection
+E1032,Seal Failure,2023-07-26,6.63,P2,Inspection
+E1012,Leakage,2023-07-14,8.88,P2,Corrective
+E1018,Electrical Fault,2024-03-05,6.05,P1,Corrective
+E1049,Electrical Fault,2023-01-17,9.14,P2,Corrective
+E1037,Bearing Wear,2023-02-10,5.57,P3,Inspection
+E1046,Leakage,2023-06-02,2.89,P3,Inspection
+E1033,Leakage,2023-04-05,7.33,P1,Inspection
+E1021,Bearing Wear,2024-05-03,8.09,P2,Inspection
+E1035,Bearing Wear,2024-03-19,8.84,P2,Corrective
+E1021,Overheating,2024-03-19,1.05,P2,Corrective
+E1049,Overheating,2023-09-26,1.12,P3,Inspection
+E1016,Bearing Wear,2023-08-01,4.62,P1,Inspection
+E1022,Overheating,2023-05-07,3.88,P2,Inspection
+E1014,Bearing Wear,2024-06-21,1.67,P1,Corrective
+E1030,Electrical Fault,2023-04-27,6.27,P1,Inspection
+E1019,Electrical Fault,2024-03-03,9.24,P3,Corrective
+E1007,Overheating,2023-10-13,2.29,P1,Inspection
+E1015,Bearing Wear,2023-04-13,5.2,P2,Corrective
+E1050,Overheating,2024-04-29,2.74,P3,Inspection
+E1023,Electrical Fault,2024-08-04,6.29,P2,Corrective
+E1032,Overheating,2023-07-01,4.53,P3,Inspection
+E1016,Seal Failure,2024-07-30,6.36,P1,Inspection
+E1048,Electrical Fault,2024-08-05,1.77,P3,Inspection
+E1017,Bearing Wear,2023-04-09,9.98,P3,Inspection
+E1006,Electrical Fault,2024-01-25,1.42,P1,Corrective
+E1016,Leakage,2023-09-01,8.81,P2,Corrective
+E1039,Electrical Fault,2023-08-19,5.26,P2,Inspection
+E1016,Overheating,2023-04-29,8.08,P3,Corrective
+E1003,Overheating,2023-08-27,3.59,P3,Corrective
+E1024,Overheating,2023-05-10,5.38,P2,Inspection
+E1013,Overheating,2024-07-04,2.9,P2,Corrective
+E1049,Bearing Wear,2023-06-03,6.15,P3,Corrective
+E1043,Bearing Wear,2023-11-16,4.56,P2,Corrective
+E1038,Leakage,2024-07-13,7.34,P3,Inspection
+E1050,Bearing Wear,2023-10-05,2.45,P1,Inspection
+E1033,Seal Failure,2023-04-11,8.82,P1,Inspection
+E1001,Overheating,2023-10-02,1.22,P1,Corrective
+E1017,Bearing Wear,2023-05-17,3.38,P3,Inspection
+E1009,Bearing Wear,2023-09-07,2.13,P1,Corrective
+E1021,Leakage,2023-11-20,4.88,P2,Inspection
+E1020,Seal Failure,2024-05-10,3.78,P2,Corrective
+E1032,Leakage,2024-06-15,1.42,P1,Inspection
+E1014,Leakage,2023-01-13,8.31,P1,Inspection
+E1004,Seal Failure,2024-04-26,7.35,P2,Inspection
+E1038,Electrical Fault,2024-04-07,1.76,P2,Inspection
+E1008,Leakage,2023-08-24,6.68,P1,Inspection
+E1039,Leakage,2023-03-29,3.93,P1,Corrective
+E1015,Seal Failure,2024-04-26,2.55,P2,Inspection
+E1018,Bearing Wear,2024-08-02,1.73,P1,Inspection
+E1031,Seal Failure,2024-05-19,7.27,P3,Corrective
+E1047,Seal Failure,2023-12-20,8.02,P3,Inspection
+E1040,Overheating,2023-08-07,9.09,P2,Corrective
+E1031,Leakage,2023-01-14,7.32,P2,Corrective
+E1001,Leakage,2024-04-23,9.3,P3,Corrective
+E1026,Seal Failure,2024-08-20,8.94,P3,Corrective
+E1046,Overheating,2023-08-21,2.18,P1,Inspection
+E1014,Seal Failure,2023-12-15,1.28,P1,Inspection
+E1042,Bearing Wear,2024-05-31,7.06,P2,Inspection
+E1024,Overheating,2023-04-26,3.72,P1,Corrective
+E1042,Overheating,2024-01-14,3.95,P1,Corrective
+E1012,Overheating,2023-01-21,1.88,P2,Corrective
+E1009,Leakage,2023-10-23,5.66,P1,Inspection
+E1018,Electrical Fault,2024-01-17,9.43,P3,Corrective
+E1006,Electrical Fault,2023-05-05,5.59,P2,Inspection
+E1041,Electrical Fault,2023-03-04,1.93,P1,Corrective
+E1045,Electrical Fault,2023-08-03,2.27,P1,Corrective
+E1002,Leakage,2024-07-05,6.52,P3,Corrective
+E1041,Electrical Fault,2023-01-08,1.13,P3,Inspection
+E1036,Seal Failure,2023-12-14,4.56,P3,Inspection
+E1020,Bearing Wear,2024-07-21,1.02,P3,Inspection
+E1016,Leakage,2023-04-12,8.67,P2,Corrective
+E1032,Overheating,2023-07-18,2.31,P2,Corrective
+E1035,Bearing Wear,2023-05-19,2.09,P2,Inspection
+E1049,Leakage,2023-05-29,7.89,P3,Inspection
+E1002,Overheating,2024-05-19,1.52,P3,Corrective
+E1038,Leakage,2023-09-07,3.91,P3,Inspection
+E1015,Seal Failure,2024-03-31,9.9,P2,Corrective
+E1033,Bearing Wear,2023-09-18,5.15,P1,Corrective
+E1036,Leakage,2023-11-23,9.26,P1,Corrective
+E1033,Bearing Wear,2023-01-20,6.22,P3,Corrective
+E1004,Seal Failure,2024-01-01,6.25,P1,Corrective
+E1043,Seal Failure,2023-09-28,5.9,P1,Inspection
+E1029,Seal Failure,2024-01-10,4.21,P1,Inspection
+E1036,Overheating,2024-02-24,8.37,P1,Inspection
+E1026,Leakage,2024-06-18,5.47,P2,Corrective
+E1034,Leakage,2023-04-19,1.03,P1,Inspection
+E1034,Seal Failure,2023-02-17,1.02,P1,Inspection
+E1026,Bearing Wear,2023-03-10,1.69,P3,Inspection
+E1014,Leakage,2023-11-20,8.79,P1,Inspection
+E1004,Leakage,2023-04-13,8.58,P3,Inspection
+E1007,Bearing Wear,2023-08-09,3.93,P1,Inspection
+E1041,Overheating,2023-12-13,4.27,P2,Inspection
+E1027,Leakage,2024-08-20,7.17,P1,Inspection
+E1026,Bearing Wear,2024-04-06,6.86,P1,Inspection
+E1034,Bearing Wear,2024-05-09,8.71,P2,Inspection
+E1025,Bearing Wear,2023-03-24,3.67,P2,Inspection
+E1027,Overheating,2023-06-27,9.05,P2,Corrective
+E1043,Seal Failure,2023-03-16,6.55,P2,Corrective
+E1035,Overheating,2024-05-03,9.97,P1,Inspection
+E1008,Overheating,2024-03-11,5.16,P3,Corrective
+E1012,Seal Failure,2023-08-14,6.24,P3,Corrective
+E1021,Bearing Wear,2023-12-19,3.65,P1,Corrective
+E1027,Electrical Fault,2023-09-07,9.18,P3,Corrective
+E1034,Overheating,2023-08-22,8.56,P1,Inspection
+E1004,Overheating,2023-02-04,3.21,P1,Inspection
+E1026,Bearing Wear,2024-05-30,5.18,P3,Corrective
+E1001,Bearing Wear,2023-11-13,2.63,P1,Corrective

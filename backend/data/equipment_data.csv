@@ -1,0 +1,51 @@
+equipment_id,equipment_type,criticality,location,install_year
+E1001,Pump,C,Offshore Deck,2018
+E1002,Compressor,A,Offshore Deck,2022
+E1003,Pump,C,Process Area B,2010
+E1004,Motor,C,Process Area A,2015
+E1005,Compressor,B,Process Area B,2011
+E1006,Pump,C,Utility Area,2017
+E1007,Pump,B,Process Area B,2018
+E1008,Compressor,A,Utility Area,2022
+E1009,Motor,B,Offshore Deck,2011
+E1010,Motor,B,Process Area B,2016
+E1011,Valve,A,Process Area B,2018
+E1012,Motor,B,Offshore Deck,2022
+E1013,Motor,C,Process Area A,2010
+E1014,Compressor,B,Offshore Deck,2008
+E1015,Pump,C,Offshore Deck,2007
+E1016,Pump,A,Utility Area,2018
+E1017,Compressor,C,Process Area A,2012
+E1018,Valve,A,Offshore Deck,2021
+E1019,Valve,B,Process Area B,2006
+E1020,Motor,B,Utility Area,2016
+E1021,Motor,C,Process Area A,2017
+E1022,Valve,C,Process Area A,2008
+E1023,Motor,B,Offshore Deck,2010
+E1024,Pump,A,Utility Area,2007
+E1025,Motor,A,Offshore Deck,2009
+E1026,Valve,B,Offshore Deck,2012
+E1027,Compressor,B,Process Area B,2013
+E1028,Motor,B,Process Area B,2017
+E1029,Pump,A,Process Area A,2021
+E1030,Motor,A,Process Area A,2005
+E1031,Valve,A,Utility Area,2015
+E1032,Pump,B,Process Area B,2021
+E1033,Compressor,A,Offshore Deck,2011
+E1034,Motor,B,Utility Area,2007
+E1035,Motor,A,Process Area B,2015
+E1036,Compressor,B,Process Area A,2006
+E1037,Motor,C,Process Area B,2018
+E1038,Compressor,A,Process Area B,2012
+E1039,Compressor,C,Process Area B,2014
+E1040,Compressor,C,Offshore Deck,2012
+E1041,Compressor,B,Process Area A,2012
+E1042,Compressor,B,Process Area B,2005
+E1043,Valve,A,Utility Area,2012
+E1044,Compressor,C,Process Area B,2016
+E1045,Motor,B,Process Area A,2006
+E1046,Motor,C,Process Area B,2014
+E1047,Pump,A,Process Area B,2014
+E1048,Pump,A,Process Area A,2015
+E1049,Pump,B,Process Area A,2015
+E1050,Motor,A,Utility Area,2012
