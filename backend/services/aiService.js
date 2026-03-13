@@ -53,6 +53,11 @@ RISK THRESHOLDS:
 EQUIPMENT DATA:
 Equipment ID: ${data.equipmentId}
 Failure Count: ${data.failureCount}
+Failure Pattern: ${data.failureCount} failures recorded
+PM Penalty: ${data.pmPenalty}
+Execution Constraint: ${data.executionNote}
+
+
 Criticality: ${data.criticality}
 Risk Score: ${data.riskScore}
 Suggested Priority: ${data.suggestedPriority}

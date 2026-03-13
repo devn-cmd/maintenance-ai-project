@@ -1,3 +1,13 @@
+// const pool = require("./config/db");
+
+// pool.connect()
+//   .then(() => console.log("PostgreSQL Connected Successfully"))
+//   .catch(err => console.error("PostgreSQL Connection Error:", err));
+
+
+
+
+
 const express = require("express");
 const cors = require("cors");
 

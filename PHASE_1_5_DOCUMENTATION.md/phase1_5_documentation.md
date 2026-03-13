@@ -1,39 +1,4 @@
-📘 Phase 1.5 – Reliability Enhanced Deterministic Model
 
-We’re going to document it properly so:
-
-• HR understands it
-• Interviewers understand it
-• Future-you understands it
-• Phase 2 has a clean starting point
-
-🧭 What We Document
-
-We document 5 things:
-
-1️⃣ Objective
-2️⃣ Architecture
-3️⃣ Risk Model Logic
-4️⃣ Execution Model Logic
-5️⃣ AI Explanation Layer
-6️⃣ API Endpoints
-7️⃣ Known Limitations
-8️⃣ Next Phase Direction
-
-I’ll now generate a clean, structured documentation file content that you can:
-
-Paste into a .md
-
-Or convert into a .docx
-
-Or push into Git as PHASE_1_5_DOCUMENTATION.md
-
-📄 PHASE 1.5 DOCUMENTATION
-
-You can copy this into a file called:
-
-PHASE_1_5_DOCUMENTATION.md
-🧭 1. Objective
 
 Phase 1.5 enhances the original deterministic maintenance prioritization engine by incorporating:
 

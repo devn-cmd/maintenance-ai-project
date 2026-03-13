@@ -8,6 +8,28 @@ function calculateRisk(equipment, failures, pmRecords) {
   const currentYear = currentDate.getFullYear();
   const failureCount = failures.length;
 
+ /* =====================================================
+      FAILURE MODE DEGRADATION DETECTION (NEW)
+     ===================================================== */
+  const modeCount = {};
+
+  failures.forEach(f => {
+    const mode = f.failure_mode;
+    if (!modeCount[mode]) modeCount[mode] = 0;
+    modeCount[mode]++;
+  });
+
+  let degradationPenalty = 0;
+
+  Object.values(modeCount).forEach(count => {
+    if (count >= 3) {
+      degradationPenalty = 4;
+    }
+  });
+
+
+
+
   /* =====================================================
      1️⃣ SORT FAILURES BY DATE
      ===================================================== */
@@ -110,7 +132,10 @@ function calculateRisk(equipment, failures, pmRecords) {
     recencyBoost +
     clusterPenalty;
 
-  const riskScore = baseRisk + pmPenalty;
+  const riskScore =
+  baseRisk +
+  pmPenalty +
+  degradationPenalty;
 
   const simulatedRiskAfterPM = baseRisk;
   const riskReduction = riskScore - simulatedRiskAfterPM;
@@ -121,6 +146,7 @@ function calculateRisk(equipment, failures, pmRecords) {
 
   return {
     riskScore,
+    degradationPenalty,
     simulatedRiskAfterPM,
     riskReduction,
     suggestedPriority,
@@ -129,7 +155,10 @@ function calculateRisk(equipment, failures, pmRecords) {
     failuresLast12Months,
     failuresLast90Days,
     recencyBoost,
-    clusterPenalty
+    clusterPenalty,
+    frequencyScore,
+    criticalityWeight,
+    ageFactor
   };
 }
 

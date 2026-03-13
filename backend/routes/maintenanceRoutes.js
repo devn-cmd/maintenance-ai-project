@@ -1,8 +1,6 @@
 /* =========================================================
-   MAINTENANCE ROUTES
+   MAINTENANCE ROUTES (CSV DEMO MODE)
    ---------------------------------------------------------
-   This file defines API endpoints related to maintenance.
-
    Responsibilities:
    - Load CSV datasets
    - Call deterministic risk engine
@@ -10,12 +8,9 @@
    - Call AI explanation service
    - Return structured decision package
 
-   This file DOES NOT:
-   - Contain business logic
-   - Calculate risk directly
-   - Contain AI logic
-
-   It only orchestrates.
+   No PostgreSQL.
+   Fully CSV-based.
+   Interview-safe version.
    ========================================================= */
 
 const express = require("express");
@@ -39,15 +34,12 @@ const { generateExplanation } = require("../services/aiService");
 /* =========================================================
    GET /api/equipment
    ---------------------------------------------------------
-   Returns equipment master data
+   Returns equipment master data from CSV
    ========================================================= */
 router.get("/equipment", async (req, res) => {
   try {
-
     const equipmentData = await loadCSV("data/equipment_data.csv");
-
     res.json(equipmentData);
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to load equipment data" });
@@ -62,8 +54,6 @@ router.get("/equipment", async (req, res) => {
    - Technical Risk
    - Execution Readiness
    - AI Explanation
-
-   Returns structured decision output
    ========================================================= */
 router.get("/priority/:equipmentId", async (req, res) => {
 
@@ -76,11 +66,9 @@ router.get("/priority/:equipmentId", async (req, res) => {
     const equipmentData = await loadCSV("data/equipment_data.csv");
     const maintenanceData = await loadCSV("data/maintenance_history.csv");
     const pmData = await loadCSV("data/preventive_maintenance.csv");
-
     const spareData = await loadCSV("data/spare_parts.csv");
     const crewData = await loadCSV("data/crew_availability.csv");
     const techData = await loadCSV("data/technician_tools.csv");
-
 
     /* ================= FIND EQUIPMENT ================= */
 
@@ -92,17 +80,50 @@ router.get("/priority/:equipmentId", async (req, res) => {
       return res.status(404).json({ error: "Equipment not found" });
     }
 
-
     /* ================= FILTER HISTORY ================= */
 
     const failures = maintenanceData.filter(
       item => item.equipment_id === equipmentId
     );
 
+    const failureModeCount = {};
+
+    failures.forEach(f => {
+      const mode = f.failure_mode;
+
+      if (!failureModeCount[mode]) {
+        failureModeCount[mode] = 0;
+      }
+
+      failureModeCount[mode]++;
+    });
+
+    let mostCommonFailureMode = "None";
+    let mostCommonCount = 0;
+
+    for (const mode in failureModeCount) {
+      if (failureModeCount[mode] > mostCommonCount) {
+        mostCommonCount = failureModeCount[mode];
+        mostCommonFailureMode = mode;
+      }
+    }
+
     const pmRecords = pmData.filter(
       item => item.equipment_id === equipmentId
     );
+    /* ================= PM STATUS ================= */
 
+      let pmStatus = "OK";
+
+      const hasOverdue = pmRecords.some(pm => pm.status === "Overdue");
+      const hasDueSoon = pmRecords.some(pm => pm.status === "Due Soon");
+
+      if (hasOverdue) {
+        pmStatus = "Overdue";
+      }
+      else if (hasDueSoon) {
+        pmStatus = "Due Soon";
+      }
 
     /* ================= CALCULATE TECHNICAL RISK ================= */
 
@@ -111,7 +132,6 @@ router.get("/priority/:equipmentId", async (req, res) => {
       failures,
       pmRecords
     );
-
 
     /* ================= FIND EXECUTION DATA ================= */
 
@@ -131,7 +151,6 @@ router.get("/priority/:equipmentId", async (req, res) => {
       return res.status(404).json({ error: "Execution data incomplete" });
     }
 
-
     /* ================= CALCULATE EXECUTION READINESS ================= */
 
     const executionResult = calculateExecutionReadiness({
@@ -139,7 +158,6 @@ router.get("/priority/:equipmentId", async (req, res) => {
       ...crew,
       ...tech
     });
-
 
     /* ================= GENERATE AI EXPLANATION ================= */
 
@@ -153,7 +171,6 @@ router.get("/priority/:equipmentId", async (req, res) => {
       executionNote: executionResult.executionRiskNote
     });
 
-
     /* ================= RETURN FINAL DECISION PACKAGE ================= */
 
     res.json({
@@ -163,14 +180,25 @@ router.get("/priority/:equipmentId", async (req, res) => {
       /* ----- Technical Risk ----- */
       failures_last_12_months: riskResult.failuresLast12Months,
       failures_last_90_days: riskResult.failuresLast90Days,
-      recency_boost: riskResult.recencyBoost,
       failure_count: riskResult.failureCount,
       criticality: equipment.criticality,
-      pm_penalty: riskResult.pmPenalty,
+      most_common_failure_mode: mostCommonFailureMode,
+      failure_mode_occurrences: mostCommonCount,
       risk_score: riskResult.riskScore,
       simulated_risk_after_pm: riskResult.simulatedRiskAfterPM,
       risk_reduction_if_pm_done: riskResult.riskReduction,
       suggested_priority: riskResult.suggestedPriority,
+      pm_status: pmStatus,
+      /* Risk Components for Explainability */
+      risk_components: {
+        frequency_score: riskResult.frequencyScore,
+        criticality_weight: riskResult.criticalityWeight,
+        age_factor: riskResult.ageFactor,
+        recency_boost: riskResult.recencyBoost,
+        cluster_penalty: riskResult.clusterPenalty,
+        pm_penalty: riskResult.pmPenalty,
+        degradation_penalty: riskResult.degradationPenalty
+      },
 
       /* ----- Execution Feasibility ----- */
       execution_status: executionResult.executionStatus,
@@ -194,10 +222,6 @@ router.get("/priority/:equipmentId", async (req, res) => {
    ---------------------------------------------------------
    Calculates technical risk for ALL equipment
    Returns sorted list (highest risk first)
-
-   Note:
-   This endpoint does NOT evaluate execution readiness.
-   It is purely technical risk ranking.
    ========================================================= */
 router.get("/backlog-risk", async (req, res) => {
 
@@ -206,6 +230,9 @@ router.get("/backlog-risk", async (req, res) => {
     const equipmentData = await loadCSV("data/equipment_data.csv");
     const maintenanceData = await loadCSV("data/maintenance_history.csv");
     const pmData = await loadCSV("data/preventive_maintenance.csv");
+    const spareData = await loadCSV("data/spare_parts.csv");
+    const crewData = await loadCSV("data/crew_availability.csv");
+    const techData = await loadCSV("data/technician_tools.csv");
 
     const results = equipmentData.map(equipment => {
 
@@ -221,14 +248,27 @@ router.get("/backlog-risk", async (req, res) => {
         equipment,
         failures,
         pmRecords
+
+      
       );
+      const spare = spareData.find(item => item.equipment_id === equipment.equipment_id);
+      const crew = crewData.find(item => item.equipment_id === equipment.equipment_id);
+      const tech = techData.find(item => item.equipment_id === equipment.equipment_id);
+
+      const execution = calculateExecutionReadiness({
+        ...spare,
+        ...crew,
+        ...tech
+      });
 
       return {
         equipment_id: equipment.equipment_id,
         criticality: equipment.criticality,
         failure_count: riskResult.failureCount,
         risk_score: riskResult.riskScore,
-        priority: riskResult.suggestedPriority
+        priority: riskResult.suggestedPriority,
+        execution_status: execution.executionStatus
+
       };
 
     });

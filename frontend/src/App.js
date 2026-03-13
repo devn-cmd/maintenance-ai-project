@@ -1,179 +1,228 @@
 import { useEffect, useState } from "react";
+import "./App.css";
 
 function App() {
 
-  /* =====================================================
-     STATE SECTION
-     -----------------------------------------------------
-     These hold dynamic data from backend APIs
-     ===================================================== */
-
-  // Stores all equipment list
   const [equipmentList, setEquipmentList] = useState([]);
-
-  // Stores selected equipment ID
-  const [selectedEquipment, setSelectedEquipment] = useState(null);
-
-  // Stores single equipment priority result
+  const [filteredList, setFilteredList] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [priorityData, setPriorityData] = useState(null);
-
-  // Stores fleet-wide risk ranking
   const [backlog, setBacklog] = useState([]);
+  const [priorityFilter, setPriorityFilter] = useState("ALL");
+  const [showRiskBreakdown, setShowRiskBreakdown] = useState(false);
+  const [showFailurePattern, setShowFailurePattern] = useState(false);
+  const [showPMImpact, setShowPMImpact] = useState(false);
 
-
-  /* =====================================================
-     LOAD INITIAL DATA (Runs once on page load)
-     ===================================================== */
   useEffect(() => {
 
-    // Load equipment master data
     fetch("http://localhost:5000/api/equipment")
       .then(res => res.json())
-      .then(data => setEquipmentList(data));
+      .then(data => {
+        setEquipmentList(data);
+        setFilteredList(data);
+      });
 
-    // Load fleet risk ranking
     fetch("http://localhost:5000/api/backlog-risk")
       .then(res => res.json())
       .then(data => setBacklog(data));
 
-  }, []); // Empty dependency array = run once
+  }, []);
 
+  /* ================= SEARCH ================= */
+  const handleSearch = () => {
+    const filtered = equipmentList.filter(item =>
+      item.equipment_id.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredList(filtered);
+  };
 
-  /* =====================================================
-     HANDLE EQUIPMENT SELECTION
-     -----------------------------------------------------
-     When user clicks "Check Priority"
-     Fetch risk calculation for selected equipment
-     ===================================================== */
+  /* ================= FETCH PRIORITY ================= */
   const handleSelect = (id) => {
-
-    setSelectedEquipment(id);
-
     fetch(`http://localhost:5000/api/priority/${id}`)
       .then(res => res.json())
       .then(data => setPriorityData(data));
   };
 
-
-  /* =====================================================
-     UI SECTION
-     ===================================================== */
   return (
-    <div style={{ padding: "40px" }}>
+    <div className="container">
 
-      <h1>Maintenance AI Dashboard</h1>
+      <h1 className="title">Maintenance AI Dashboard</h1>
 
-      {/* ================================================
-         EQUIPMENT LIST SECTION
-         ================================================ */}
+      {/* ================= SEARCH BAR ================= */}
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Search Equipment ID..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-input"
+        />
+        <button onClick={handleSearch} className="search-button">
+          Search
+        </button>
+      </div>
+
+      {/* ================= EQUIPMENT LIST ================= */}
       <h2>Equipment List</h2>
 
-      <ul>
-        {equipmentList.map((item, index) => (
-          <li key={index}>
-            {item.equipment_id} - {item.equipment_type} - Criticality {item.criticality}
+      <table className="equipment-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Type</th>
+            <th>Criticality</th>
+            <th>Action</th>
+          </tr>
+        </thead>
 
-            <button
-              onClick={() => handleSelect(item.equipment_id)}
-              style={{ marginLeft: "10px" }}
-            >
-              Check Priority
-            </button>
-          </li>
-        ))}
-      </ul>
+        <tbody>
+          {filteredList.map((item, index) => (
+            <tr key={index}>
+              <td>{item.equipment_id}</td>
+              <td>{item.equipment_type}</td>
+              <td>{item.criticality}</td>
+              <td>
+                <button
+                  onClick={() => handleSelect(item.equipment_id)}
+                  className="action-button"
+                >
+                  Check
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-
-      {/* ================================================
-         SINGLE ASSET PRIORITY RESULT
-         ================================================ */}
+      {/* ================= PRIORITY RESULT CARD ================= */}
       {priorityData && (
-        <div
-          style={{
-            marginTop: "30px",
-            border: "1px solid black",
-            padding: "20px"
-          }}
-        >
-          <h3>Priority Result</h3>
+        <div className="card">
+          <h2>Priority Result</h2>
 
           <p><strong>Equipment:</strong> {priorityData.equipment_id}</p>
           <p><strong>Failure Count:</strong> {priorityData.failure_count}</p>
           <p><strong>Criticality:</strong> {priorityData.criticality}</p>
+          <p><strong>PM Status:</strong> {priorityData.pm_status}</p>
           <p><strong>Risk Score:</strong> {priorityData.risk_score}</p>
-          <p><strong>Simulated Risk (If PM Completed):</strong> {priorityData.simulated_risk_after_pm}</p>
-          <p>
-            <strong>Risk Reduction if PM Done:</strong>
-            <span style={{ color: "blue", marginLeft: "5px" }}>
-              -{priorityData.risk_reduction_if_pm_done}
-            </span>
-          </p>
+          <h3 onClick={() => setShowRiskBreakdown(!showRiskBreakdown)}
+              style={{cursor:"pointer"}}>
+          ▼ Risk Breakdown
+          </h3>
+
+          {showRiskBreakdown && (
+            <div>
+              <p>Frequency Score: {priorityData.risk_components.frequency_score}</p>
+              <p>Criticality Weight: {priorityData.risk_components.criticality_weight}</p>
+              <p>Age Factor: {priorityData.risk_components.age_factor}</p>
+              <p>Recency Boost: {priorityData.risk_components.recency_boost}</p>
+              <p>Cluster Penalty: {priorityData.risk_components.cluster_penalty}</p>
+              <p>PM Penalty: {priorityData.risk_components.pm_penalty}</p>
+              <p>Failure Mode Degradation: {priorityData.risk_components.degradation_penalty}</p>
+            </div>
+          )}
+
+          <h3 onClick={() => setShowFailurePattern(!showFailurePattern)}
+              style={{cursor:"pointer"}}>
+          ▼ Failure Pattern
+          </h3>
+
+          {showFailurePattern && (
+            <div>
+              <p>
+                Most Common Failure Mode: {priorityData.most_common_failure_mode}
+              </p>
+              <p>
+                Occurrences: {priorityData.failure_mode_occurrences}
+              </p>
+            </div>
+          )}
+
+          <h3 onClick={() => setShowPMImpact(!showPMImpact)}
+              style={{cursor:"pointer"}}>
+          ▼ Preventive Maintenance Impact
+          </h3>
+
+          {showPMImpact && (
+            <div>
+              <p>Current Risk: {priorityData.risk_score}</p>
+              <p>Risk After PM: {priorityData.simulated_risk_after_pm}</p>
+              <p>Risk Reduction: {priorityData.risk_reduction_if_pm_done}</p>
+            </div>
+          )}
           <p>
             <strong>Suggested Priority:</strong>
-            <span
-              style={{
-                marginLeft: "8px",
-                color:
-                  priorityData.suggested_priority === "P1"
-                    ? "red"
-                    : priorityData.suggested_priority === "P2"
-                    ? "orange"
-                    : "green"
-              }}
-            >
+            <span className={`priority ${priorityData.suggested_priority}`}>
               {priorityData.suggested_priority}
             </span>
           </p>
-          <p><strong>Execution Status:</strong> {priorityData.execution_status}</p>
-          <p><strong>Execution Note:</strong> {priorityData.execution_note}</p>
-          <p><strong>Planning Recommendation:</strong> {priorityData.planning_recommendation}</p>
+
           <p>
-            <strong>Explanation:</strong><br />
-            {priorityData.explanation}
+            <strong>Execution Status:</strong>
+            <span className={`execution ${priorityData.execution_status}`}>
+              {priorityData.execution_status}
+            </span>
           </p>
+
+          <p><strong>Execution Note:</strong> {priorityData.execution_note}</p>
+          <p><strong>Recommendation:</strong> {priorityData.planning_recommendation}</p>
+
+          <p><strong>Explanation:</strong></p>
+          <p className="explanation">{priorityData.explanation}</p>
         </div>
       )}
 
+      {/* ================= FLEET RISK OVERVIEW ================= */}
+      <div className="fleet-section">
+        <h2>Fleet Risk Overview</h2>
 
-      {/* ================================================
-         FLEET RISK RANKING SECTION
-         Shows Top 5 Highest Risk Assets
-         ================================================ */}
-      <div style={{ marginTop: "50px" }}>
-        <h2>Fleet Risk Ranking (Top 5)</h2>
+        <div className="filter-container">
+          <label>Filter by Priority: </label>
+          <select
+            value={priorityFilter}
+            onChange={(e) => setPriorityFilter(e.target.value)}
+            className="dropdown"
+          >
+            <option value="ALL">All</option>
+            <option value="P1">P1</option>
+            <option value="P2">P2</option>
+            <option value="P3">P3</option>
+          </select>
+        </div>
 
-        <table border="1" cellPadding="8">
+        <table className="equipment-table">
           <thead>
             <tr>
-              <th>Equipment</th>
+              <th>ID</th>
               <th>Criticality</th>
               <th>Failures</th>
               <th>Risk Score</th>
               <th>Priority</th>
+              <th>Execution</th>
             </tr>
           </thead>
 
           <tbody>
-            {backlog.slice(0, 5).map((item, index) => (
-              <tr key={index}>
-                <td>{item.equipment_id}</td>
-                <td>{item.criticality}</td>
-                <td>{item.failure_count}</td>
-                <td>{item.risk_score}</td>
-                <td
-                  style={{
-                    color:
-                      item.priority === "P1"
-                        ? "red"
-                        : item.priority === "P2"
-                        ? "orange"
-                        : "green"
-                  }}
-                >
-                  {item.priority}
-                </td>
-              </tr>
-            ))}
+            {backlog
+              .filter(item =>
+                priorityFilter === "ALL"
+                  ? true
+                  : item.priority === priorityFilter
+              )
+              .map((item, index) => (
+                <tr key={index}>
+                  <td>{item.equipment_id}</td>
+                  <td>{item.criticality}</td>
+                  <td>{item.failure_count}</td>
+                  <td>{item.risk_score}</td>
+
+                  <td className={`priority ${item.priority}`}>
+                    {item.priority}
+                  </td>
+                  <td className={`execution ${item.execution_status}`}>
+                    {item.execution_status}
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
