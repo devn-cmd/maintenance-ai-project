@@ -12,7 +12,7 @@ function App() {
   const [showRiskBreakdown, setShowRiskBreakdown] = useState(false);
   const [showFailurePattern, setShowFailurePattern] = useState(false);
   const [showPMImpact, setShowPMImpact] = useState(false);
-
+  const [fleetAnalytics, setFleetAnalytics] = useState(null);
   useEffect(() => {
 
     fetch("http://localhost:5000/api/equipment")
@@ -25,6 +25,16 @@ function App() {
     fetch("http://localhost:5000/api/backlog-risk")
       .then(res => res.json())
       .then(data => setBacklog(data));
+
+    const fetchFleetAnalytics = async () => 
+    {
+      const response = await 
+    fetch("http://localhost:5000/api/fleet-analytics");
+      const data = await response.json();
+      setFleetAnalytics(data);
+    };
+
+    fetchFleetAnalytics();
 
   }, []);
 
@@ -227,7 +237,40 @@ function App() {
         </table>
       </div>
 
+    
+      {/* ================= FLEET ANALYTICS ================= */}
+      {fleetAnalytics && (
+      <div className="fleet-section">
+
+        <h2>Fleet Analytics</h2>
+
+        <p>
+          <strong>Total Failures:</strong> {fleetAnalytics.total_failures}
+        </p>
+
+        <h3>Top Failure Modes</h3>
+        <ul>
+          {fleetAnalytics.top_failure_modes.map((mode, index) => (
+            <li key={index}>
+              {mode.failure_mode} — {mode.count}
+            </li>
+         ))}
+        </ul>
+
+        <h3>Maintenance Distribution</h3>
+        <ul>
+          {fleetAnalytics.maintenance_distribution.map((type, index) => (
+            <li key={index}>
+              {type.maintenance_type} — {type.count}
+            </li>
+          ))}
+        </ul>
+
+      </div>
+    )}
+        
     </div>
+    
   );
 }
 
