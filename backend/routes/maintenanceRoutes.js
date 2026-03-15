@@ -1,16 +1,12 @@
 /* =========================================================
-   MAINTENANCE ROUTES (CSV DEMO MODE)
+   MAINTENANCE ROUTES (POSTGRESQL DATA MODE)
    ---------------------------------------------------------
    Responsibilities:
-   - Load CSV datasets
+   - Load maintenance datasets from PostgreSQL
    - Call deterministic risk engine
    - Call execution readiness engine
    - Call AI explanation service
    - Return structured decision package
-
-   No PostgreSQL.
-   Fully CSV-based.
-   Interview-safe version.
    ========================================================= */
 
 const express = require("express");
@@ -18,8 +14,8 @@ const router = express.Router();
 
 /* ===================== SERVICE IMPORTS ===================== */
 
-// CSV Loader
-const { loadCSV } = require("../services/dataLoader");
+// PostgreSQL connection
+const pool = require("../services/db");
 
 // Deterministic technical risk engine
 const { calculateRisk } = require("../services/riskEngine");
@@ -34,12 +30,16 @@ const { generateExplanation } = require("../services/aiService");
 /* =========================================================
    GET /api/equipment
    ---------------------------------------------------------
-   Returns equipment master data from CSV
+   Returns equipment master data from PostgreSQL
    ========================================================= */
 router.get("/equipment", async (req, res) => {
   try {
-    const equipmentData = await loadCSV("data/equipment_data.csv");
+
+    const result = await pool.query("SELECT * FROM equipment");
+    const equipmentData = result.rows;
+
     res.json(equipmentData);
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to load equipment data" });
@@ -61,14 +61,21 @@ router.get("/priority/:equipmentId", async (req, res) => {
 
     const equipmentId = req.params.equipmentId;
 
-    /* ================= LOAD ALL DATASETS ================= */
+    /* ================= LOAD DATA FROM DATABASE ================= */
 
-    const equipmentData = await loadCSV("data/equipment_data.csv");
-    const maintenanceData = await loadCSV("data/maintenance_history.csv");
-    const pmData = await loadCSV("data/preventive_maintenance.csv");
-    const spareData = await loadCSV("data/spare_parts.csv");
-    const crewData = await loadCSV("data/crew_availability.csv");
-    const techData = await loadCSV("data/technician_tools.csv");
+    const equipmentResult = await pool.query("SELECT * FROM equipment");
+    const maintenanceResult = await pool.query("SELECT * FROM maintenance_history");
+    const pmResult = await pool.query("SELECT * FROM preventive_maintenance");
+    const spareResult = await pool.query("SELECT * FROM spare_parts");
+    const crewResult = await pool.query("SELECT * FROM crew_availability");
+    const techResult = await pool.query("SELECT * FROM technician_tools");
+
+    const equipmentData = equipmentResult.rows;
+    const maintenanceData = maintenanceResult.rows;
+    const pmData = pmResult.rows;
+    const spareData = spareResult.rows;
+    const crewData = crewResult.rows;
+    const techData = techResult.rows;
 
     /* ================= FIND EQUIPMENT ================= */
 
@@ -80,11 +87,13 @@ router.get("/priority/:equipmentId", async (req, res) => {
       return res.status(404).json({ error: "Equipment not found" });
     }
 
-    /* ================= FILTER HISTORY ================= */
+    /* ================= FILTER FAILURE HISTORY ================= */
 
     const failures = maintenanceData.filter(
       item => item.equipment_id === equipmentId
     );
+
+    /* ================= FAILURE MODE ANALYSIS ================= */
 
     const failureModeCount = {};
 
@@ -108,22 +117,19 @@ router.get("/priority/:equipmentId", async (req, res) => {
       }
     }
 
+    /* ================= PREVENTIVE MAINTENANCE ================= */
+
     const pmRecords = pmData.filter(
       item => item.equipment_id === equipmentId
     );
-    /* ================= PM STATUS ================= */
 
-      let pmStatus = "OK";
+    let pmStatus = "OK";
 
-      const hasOverdue = pmRecords.some(pm => pm.status === "Overdue");
-      const hasDueSoon = pmRecords.some(pm => pm.status === "Due Soon");
+    const hasOverdue = pmRecords.some(pm => pm.status === "Overdue");
+    const hasDueSoon = pmRecords.some(pm => pm.status === "Due Soon");
 
-      if (hasOverdue) {
-        pmStatus = "Overdue";
-      }
-      else if (hasDueSoon) {
-        pmStatus = "Due Soon";
-      }
+    if (hasOverdue) pmStatus = "Overdue";
+    else if (hasDueSoon) pmStatus = "Due Soon";
 
     /* ================= CALCULATE TECHNICAL RISK ================= */
 
@@ -133,7 +139,7 @@ router.get("/priority/:equipmentId", async (req, res) => {
       pmRecords
     );
 
-    /* ================= FIND EXECUTION DATA ================= */
+    /* ================= EXECUTION READINESS ================= */
 
     const spare = spareData.find(
       item => item.equipment_id === equipmentId
@@ -151,15 +157,13 @@ router.get("/priority/:equipmentId", async (req, res) => {
       return res.status(404).json({ error: "Execution data incomplete" });
     }
 
-    /* ================= CALCULATE EXECUTION READINESS ================= */
-
     const executionResult = calculateExecutionReadiness({
       ...spare,
       ...crew,
       ...tech
     });
 
-    /* ================= GENERATE AI EXPLANATION ================= */
+    /* ================= AI EXPLANATION ================= */
 
     const explanation = await generateExplanation({
       equipmentId,
@@ -171,7 +175,7 @@ router.get("/priority/:equipmentId", async (req, res) => {
       executionNote: executionResult.executionRiskNote
     });
 
-    /* ================= RETURN FINAL DECISION PACKAGE ================= */
+    /* ================= RESPONSE PACKAGE ================= */
 
     res.json({
 
@@ -182,14 +186,18 @@ router.get("/priority/:equipmentId", async (req, res) => {
       failures_last_90_days: riskResult.failuresLast90Days,
       failure_count: riskResult.failureCount,
       criticality: equipment.criticality,
+
       most_common_failure_mode: mostCommonFailureMode,
       failure_mode_occurrences: mostCommonCount,
+
       risk_score: riskResult.riskScore,
       simulated_risk_after_pm: riskResult.simulatedRiskAfterPM,
       risk_reduction_if_pm_done: riskResult.riskReduction,
+
       suggested_priority: riskResult.suggestedPriority,
       pm_status: pmStatus,
-      /* Risk Components for Explainability */
+
+      /* ----- Risk Components (Explainability) ----- */
       risk_components: {
         frequency_score: riskResult.frequencyScore,
         criticality_weight: riskResult.criticalityWeight,
@@ -211,9 +219,12 @@ router.get("/priority/:equipmentId", async (req, res) => {
     });
 
   } catch (error) {
+
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
+
   }
+
 });
 
 
@@ -227,12 +238,19 @@ router.get("/backlog-risk", async (req, res) => {
 
   try {
 
-    const equipmentData = await loadCSV("data/equipment_data.csv");
-    const maintenanceData = await loadCSV("data/maintenance_history.csv");
-    const pmData = await loadCSV("data/preventive_maintenance.csv");
-    const spareData = await loadCSV("data/spare_parts.csv");
-    const crewData = await loadCSV("data/crew_availability.csv");
-    const techData = await loadCSV("data/technician_tools.csv");
+    const equipmentResult = await pool.query("SELECT * FROM equipment");
+    const maintenanceResult = await pool.query("SELECT * FROM maintenance_history");
+    const pmResult = await pool.query("SELECT * FROM preventive_maintenance");
+    const spareResult = await pool.query("SELECT * FROM spare_parts");
+    const crewResult = await pool.query("SELECT * FROM crew_availability");
+    const techResult = await pool.query("SELECT * FROM technician_tools");
+
+    const equipmentData = equipmentResult.rows;
+    const maintenanceData = maintenanceResult.rows;
+    const pmData = pmResult.rows;
+    const spareData = spareResult.rows;
+    const crewData = crewResult.rows;
+    const techData = techResult.rows;
 
     const results = equipmentData.map(equipment => {
 
@@ -248,12 +266,19 @@ router.get("/backlog-risk", async (req, res) => {
         equipment,
         failures,
         pmRecords
-
-      
       );
-      const spare = spareData.find(item => item.equipment_id === equipment.equipment_id);
-      const crew = crewData.find(item => item.equipment_id === equipment.equipment_id);
-      const tech = techData.find(item => item.equipment_id === equipment.equipment_id);
+
+      const spare = spareData.find(
+        item => item.equipment_id === equipment.equipment_id
+      );
+
+      const crew = crewData.find(
+        item => item.equipment_id === equipment.equipment_id
+      );
+
+      const tech = techData.find(
+        item => item.equipment_id === equipment.equipment_id
+      );
 
       const execution = calculateExecutionReadiness({
         ...spare,
@@ -268,7 +293,6 @@ router.get("/backlog-risk", async (req, res) => {
         risk_score: riskResult.riskScore,
         priority: riskResult.suggestedPriority,
         execution_status: execution.executionStatus
-
       };
 
     });
@@ -278,9 +302,12 @@ router.get("/backlog-risk", async (req, res) => {
     res.json(results);
 
   } catch (error) {
+
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
+
   }
+
 });
 
 
