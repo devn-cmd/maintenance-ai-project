@@ -22,6 +22,8 @@ const { calculateExecutionReadiness } = require("../services/executionEngine");
 
 const { generateExplanation } = require("../services/aiService");
 
+const { askRAG } = require("../rag/ragservice.js");
+
 
 /* =========================================================
    GET /api/equipment
@@ -298,7 +300,7 @@ router.get("/backlog-risk", async (req, res) => {
         failures,
         pmRecords
       );
-
+      if (!spare || !crew || !tech) continue; // skip incomplete equipment
       const execution = calculateExecutionReadiness({
         ...spare,
         ...crew,
@@ -387,5 +389,31 @@ router.get("/fleet-analytics", async (req, res) => {
 
   }
 
+});
+/* =========================================================
+   POST /api/ask-ai
+   ---------------------------------------------------------
+   Endpoint for RAG-based AI question answering
+   ========================================================= */
+  router.post("/ask-ai", async (req, res) => {
+  try {
+
+    const { question } = req.body;
+
+    if (!question) {
+      return res.status(400).json({ error: "Question is required" });
+    }
+
+
+    const answer = await askRAG(question);
+
+    res.json({ answer });
+
+  } catch (error) {
+
+    console.error(error);
+    res.status(500).json({ error: "AI assistant failed" });
+
+  }
 });
 module.exports = router;

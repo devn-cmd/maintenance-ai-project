@@ -85,7 +85,7 @@ Generate explanation:
   const response = await axios.post(
     "http://localhost:11434/api/generate",
     {
-      model: "qcwind/qwen3-8b-instruct-Q4-K-M:latest",
+      model: "qwen3.5:9b-q4_K_M",
       prompt: structuredPrompt,
       stream: false
     }

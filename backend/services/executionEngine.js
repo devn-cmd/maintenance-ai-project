@@ -9,10 +9,10 @@ function calculateExecutionReadiness(data) {
 
   const spareStatus = data.spare_status;
   const leadTime = parseInt(data.lead_time_weeks);
-  const crewAvailable = data.crew_available === "true";
   const daysUntilRotation = parseInt(data.days_until_next_rotation);
-  const technicianAvailable = data.technician_available === "true";
-  const toolsAvailable = data.tools_available === "true";
+  const crewAvailable        = data.crew_available        === true || data.crew_available        === "true";
+  const technicianAvailable  = data.technician_available  === true || data.technician_available  === "true";
+  const toolsAvailable       = data.tools_available       === true || data.tools_available       === "true";
 
   // Spare logic
   if (spareStatus === "Not Available" && leadTime > 8) {

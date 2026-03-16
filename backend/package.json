@@ -11,11 +11,15 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@langchain/community": "^1.1.23",
+    "@langchain/ollama": "^1.2.6",
+    "@langchain/textsplitters": "^1.0.1",
     "axios": "^1.13.6",
     "cors": "^2.8.6",
     "csv-parser": "^3.2.0",
     "express": "^5.2.1",
     "fs": "^0.0.1-security",
+    "pdf-parse": "^1.1.4",
     "pg": "^8.20.0"
   }
 }
