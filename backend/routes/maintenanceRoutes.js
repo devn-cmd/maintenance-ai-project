@@ -189,7 +189,10 @@ router.get("/priority/:equipmentId", async (req, res) => {
 
       executionStatus: executionResult.executionStatus,
 
-      executionNote: executionResult.executionRiskNote
+      executionNote: executionResult.executionRiskNote,
+      
+
+      pm_penalty: riskResult.pmPenalty,
 
     });
 

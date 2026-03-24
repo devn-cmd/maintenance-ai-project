@@ -1,0 +1,109 @@
+# services:
+ 
+#   backend:
+#     build: ./backend
+#     ports:
+#       - "5000:5000"
+#     depends_on:
+#       - db
+#       - ollama
+#     environment:
+#       DB_HOST: db                  # ✅ tells backend to connect to "db" container
+#       OLLAMA_HOST: ollama          # ✅ tells backend to connect to "ollama" container
+#     networks:
+#       - mainnet
+ 
+#   frontend:
+#     build: ./frontend
+#     ports:
+#       - "3000:3000"
+#     networks:
+#       - mainnet
+ 
+#   db:
+#     image: postgres:16             # ✅ pinned to stable version — avoids pg18 issues
+#     environment:
+#       POSTGRES_USER: postgres
+#       POSTGRES_PASSWORD: password
+#       POSTGRES_DB: Maintenance-ai-DB  # ✅ matches db.js
+#     ports:
+#       - "5432:5432"
+#     volumes:
+#       - pg_data:/var/lib/postgresql/data
+#       - ./init.sql:/docker-entrypoint-initdb.d/init.sql   # ✅ auto runs on first start
+#     networks:
+#       - mainnet
+ 
+#   ollama:
+#     image: ollama/ollama
+#     ports:
+#       - "11434:11434"
+#     volumes:
+#       - ollama_data:/root/.ollama          # ✅ models persist between restarts
+#     entrypoint: ["/bin/sh", "-c", "ollama serve & sleep 10 && ollama pull qwen3.5:9b-q4_K_M && ollama pull nomic-embed-text && wait"]
+#     networks:
+#       - mainnet
+ 
+# networks:
+#   mainnet:
+#     driver: bridge                         # ✅ all containers share this network
+ 
+# volumes:
+#   pg_data:                                 # ✅ PostgreSQL data persists
+#   ollama_data:                             # ✅ Ollama models persist
+
+
+services:
+
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+      - ollama
+    environment:
+      DB_HOST: db                  # ✅ tells backend to connect to "db" container
+      OLLAMA_HOST: ollama          # ✅ tells backend to connect to "ollama" container
+    networks:
+      - mainnet
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - mainnet
+
+  db:
+    image: postgres:18             # ✅ pinned to stable version — avoids pg18 issues
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: maintenance_DB  # ✅ matches db.js
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+     
+    networks:
+      - mainnet
+
+  ollama:
+    image: ollama/ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama          # ✅ models persist between restarts
+    entrypoint: ["/bin/sh", "-c", "ollama serve & sleep 10 && ollama pull qwen3.5:9b-q4_K_M && ollama pull nomic-embed-text && wait"]
+    networks:
+      - mainnet
+
+networks:
+  mainnet:
+    driver: bridge                         # ✅ all containers share this network
+
+volumes:
+  pg_data:                                 # ✅ PostgreSQL data persists
+  ollama_data:                             # ✅ Ollama models persist
